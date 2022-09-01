@@ -42,7 +42,7 @@
                     <mat-icon *ngIf="!collapsed">add</mat-icon>
                 </div>
 
-                <div *ngIf="listDailyExchangeRate?.length" class="container-collapsed">
+                <div *ngIf="listDailyExchangeRate?.length && collapsed" class="container-collapsed">
                     <div class="card-collapsed" *ngFor="let item of listDailyExchangeRate">
                         <span class="date-card">{{item.date | date: 'dd/MM/yyyy'}}</span>
                         <div class="currency-info">
@@ -69,4 +69,19 @@
     <div class="footer">
         <span>Copyright 2022 - Action Labs</span>
     </div>
+
+    <div class="my-container">
+        <ng-template #customLoadingTemplate>
+          <div class="custom-class">
+            <h3>Loading...</h3>
+          </div>
+        </ng-template>
+      
+        <ngx-loading
+          [show]="loading"
+          [config]="{ backdropBorderRadius: '3px' }"
+          [template]="customLoadingTemplate"
+        ></ngx-loading>
+        //...
+      </div>
 </div>

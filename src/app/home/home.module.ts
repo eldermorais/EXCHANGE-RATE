@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
+import { NgxLoadingModule } from 'ngx-loading';
 
 
 
@@ -23,6 +24,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
+    NgxLoadingModule.forRoot({})
   ],
   exports: [
     HomeComponent

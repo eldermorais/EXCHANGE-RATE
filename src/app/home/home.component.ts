@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { HomeService } from './home.service';
 
@@ -38,6 +38,8 @@ export interface DataDailyExchangeRate {
 })
 export class HomeComponent implements OnInit {
 
+  public loading = false;
+
   public form: FormGroup;
 
   public searchResult: CurrentExchangeRate | undefined;
@@ -68,9 +70,11 @@ export class HomeComponent implements OnInit {
   handleLastThirtyDays() {
     this.collapsed = !this.collapsed;
     if(this.collapsed === true && !this.listDailyExchangeRate?.length){
-      this.service.getDailyExchangeRate(this.searchResult?.fromSymbol || '').subscribe(result => {
+      this.loading = true;
+      this.service.getDailyExchangeRate(this.searchResult?.fromSymbol || '').subscribe({next:result => {
+        this.loading = false;
         if(result.success === false){
-          this.toastr.error('Erro ao consultar a sigla digitada')
+          this.toastr.error('Error querying entered characters.')
         }else {
           
           this.listDailyExchangeRate = result.data.slice(0,29);
@@ -83,20 +87,31 @@ export class HomeComponent implements OnInit {
             } else {
               diff = 0;
             }
-            item.diff = Number(diff.toFixed(4))
+            item.diff = Number(diff.toFixed(4));
           })          
         }        
+      },
+      error: err => {
+        this.loading = false;
+      },
       })
     }
   }
 
   searchCurrentExchange() {
-    this.service.getCurrentExchangeRate(this.search?.value).subscribe(result => {
+    this.loading = true;
+    this.service.getCurrentExchangeRate(this.search?.value).subscribe({next: result => {
+      this.loading =false      
       if(result.success === false){
-        this.toastr.error('Erro ao consultar a sigla digitada')
+        this.toastr.error('Error querying entered characters.')
       }else {
         this.searchResult = result;
       }      
+    },error: err => {
+      this.toastr.error('Error performing the query. Try again later.')
+      this.loading = false;
+
+    }
     })
   }
   
